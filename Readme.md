@@ -225,14 +225,6 @@ spec:
       linodebs.csi.linode.com/luks-encrypted: "true"
       linodebs.csi.linode.com/luks-key-size: "512"
     volumeHandle: %#VOLUME_HANDLE#%
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: healeeDesignation
-          operator: In
-          values:
-            - load2
 
 ---
 apiVersion: v1
