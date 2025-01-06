@@ -1,7 +1,16 @@
 # Linode/Akamain Luks PV Recreation Error Demo
 
-1. Create the namespaces: 1.1. Create a yaml file, named `namespaces.yml` with
-   the content of:
+Demonstrates the inability to re-mount a pv at Linode LKE once it has been
+unattached.
+
+For simplicity, the `all-steps.sh` script uses time-based waiting for the k8s
+objects to initialize.
+
+## Create the namespaces
+
+### Yaml file
+
+Create a yaml file, named `namespaces.yml` with the content of:
 
 ```
 kind: Namespace
@@ -21,19 +30,30 @@ metadata:
 
 ```
 
-1.2. Create the namespaces via the command of ``
+### Creation
 
-1. Create the secret:
+Create the namespaces via the command of `kubectl apply -f ./namespaces.yml`
 
-- create a text file, named my-luks-secret with the content of
-  'luksKey=AVerySecretForLuksDiskEncryption'
+## Create the secret
 
-- create the secret via the command of
-  `kubectl create secret generic my-luks-secret -n csi-encrypt-keys --from-env-file=./my-luks-secret`
+### Yaml file
 
-2. Create the storage class:
+Create a text file, named my-luks-secret with the content of
 
-- Create a yaml file, named `luks-storage-class.yml` with the content of:
+```
+luksKey=AVerySecretForLuksDiskEncryption
+```
+
+### Creation
+
+Create the secret via the command of
+`kubectl create secret generic my-luks-secret -n csi-encrypt-keys --from-env-file=./my-luks-secret`
+
+## Create the storage class:
+
+### Yaml file
+
+Create a yaml file, named `luks-storage-class.yml` with the content of:
 
 ```
 allowVolumeExpansion: true
@@ -54,12 +74,16 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-name: my-luks-secret
 ```
 
-- Create the storage class via the command of
-  `kubectl apply -f ./luks-storage-class.yml`
+### Creation
 
-3. Create the initial PV (automatically, via a PVC declaration)
+Create the storage class via the command of
+`kubectl apply -f ./luks-storage-class.yml`
 
-- Create a yaml file, named `initial-pv.yml` with the content of:
+## Create the initial PV (automatically, via a PVC declaration)
+
+### Yaml file
+
+Create a yaml file, named `initial-pv.yml` with the content of:
 
 ```
 apiVersion: v1
@@ -76,10 +100,13 @@ spec:
   storageClassName: my-luks-storage-class
 ```
 
-- Create the pv/pvc pair via the command of `kubectl apply -f ./initial-pv.yml`
+### Creation
 
-4. Get the details of the newly created volume, needed for the recreation later.
-   Save them somewhere. Run the commands:
+Create the pv/pvc pair via the command of `kubectl apply -f ./initial-pv.yml`
+
+## Get new volume details, persist for the recreation later
+
+Run the commands
 
 ```
 pvName=$(kubectl get pvc my-pvc -n my-namespace -o jsonpath='{.spec.volumeName}')
@@ -91,8 +118,11 @@ echo "VolumeHandle: " + ${volumeHandle}
 echo "csiProvisionerIdentity: " + ${csiProvisionerIdentity}
 ```
 
-5. Create a real service, using the pv and pvc: 5.1. Create a yaml file, named
-   `dbs.yml` with the content of:
+## Create a real service, using the pv and pvc
+
+### Yaml file
+
+Create a yaml file, named `dbs.yml` with the content of:
 
 ```
 apiVersion: apps/v1
@@ -139,20 +169,29 @@ spec:
       targetPort: 27017
 ```
 
-5.2. Create the service and sts via the command of `kubectl apply -f ./dbs.yml`
+### Creation
 
-5.3. Wait for the service to get initialized (a minute or two should suffice)
+Create the service and sts via the command of `kubectl apply -f ./dbs.yml`
 
-6. Delete the real service via the command of `kubectl delete -f ./dbs.yml`
+### Wait for the service to get initialized (a minute or two should suffice)
 
-7. Delete the pvc via the command of `kubectl delete pvc my-pvc -n my-namespace`
+## Delete the real service
 
-8. Delete the pv via the command of `kubectl delete pv PV-NAME-HERE`. Use the
-   `pvName` from Step4.
+Run the command `kubectl delete -f ./dbs.yml`
 
-9. Recreate the pv and pvc:
+## Delete the pvc
 
-9.1. Create a yaml file named `mypv-secondary.template.yml` with the content of:
+Run the command `kubectl delete pvc my-pvc -n my-namespace`
+
+## Delete the pv
+
+Run the command `kubectl delete pv PV-NAME-HERE`. Use the `pvName` from Step4.
+
+## Recreate the pv and pvc:
+
+### Yaml file
+
+Create a yaml file named `mypv-secondary.template.yml` with the content of:
 
 ```
 apiVersion: v1
@@ -203,7 +242,9 @@ spec:
   volumeName: %#VOLUME_NAME#%
 ```
 
-9.2. Recreate the pv and pvc via the command of
+### Creation
+
+Recreate the pv and pvc via the command
 
 ```
 cat mypv-secondary.template.yml | \
@@ -212,7 +253,8 @@ cat mypv-secondary.template.yml | \
 	kubectl apply -f -
 ```
 
-10. Try creating the real service again, via the command of
-    `kubectl apply -f ./dbs.yml`
+## Try creating the real service again
 
-Checking the pv now lists the unable to mount error.
+Run the command `kubectl apply -f ./dbs.yml`
+
+Checking the pv and pvc now list the unable to mount error.
