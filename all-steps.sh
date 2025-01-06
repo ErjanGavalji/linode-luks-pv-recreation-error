@@ -84,4 +84,16 @@ echo "Give the system some time to attempt recreating the real service..."
 show_progress 10 3
 echo ""
 
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo "================================================================================"
+kubectl describe pvc my-pvc
+echo ""
+echo ""
+echo ""
+echo ""
+echo "================================================================================"
 kubectl describe pv ${pvName}
