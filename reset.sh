@@ -41,7 +41,7 @@ show_progress 10 3
 echo ""
 
 echo "Deleting the storage class..."
-kubectl delete -f ./storage-class.yml
+kubectl delete -f ./luks-storage-class.yml
 
 echo "Deleting the secret..."
 kubectl delete secret my-luks-secret -n csi-encrypt-keys
