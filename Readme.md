@@ -1,7 +1,9 @@
 # Linode/Akamain Luks PV Recreation Error Demo
 
-Demonstrates the inability to re-mount a pv at Linode LKE once it has been
-unattached.
+Demonstrates the inability to re-mount a LUKS-envrypted pv at Linode LKE once it
+has been unattached and re-attached by a provided volumeHandle. If the cluster
+is simply recycled however, the pv gets attached automatically via the
+[BlockStorage CSI Driver](https://github.com/linode/linode-blockstorage-csi-driver/)
 
 For simplicity, the `all-steps.sh` script uses time-based waiting for the k8s
 objects to initialize.
