@@ -32,7 +32,7 @@ show_progress 20 3
 echo ""
 
 echo "Deleting the pvc and pv..."
-pvName=$(kubectl get pvc my-pvc -o jsonpath='{.spec.volumeName}')
+pvName=$(kubectl get pvc -n my-namespace my-pvc -o jsonpath='{.spec.volumeName}')
 echo "pvName: ${pvName}"
 kubectl delete pvc my-pvc
 kubectl delete pv ${pvName}
