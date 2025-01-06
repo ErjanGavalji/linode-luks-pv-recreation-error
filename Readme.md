@@ -6,9 +6,15 @@ unattached.
 For simplicity, the `all-steps.sh` script uses time-based waiting for the k8s
 objects to initialize.
 
-## Create the namespaces
+## Requirements
 
-### Yaml file
+You need a simple k8s cluster in LKE, with a kubeconfig yaml file.
+
+## Steps
+
+### Create the namespaces
+
+#### Yaml file
 
 Create a yaml file, named `namespaces.yml` with the content of:
 
@@ -30,13 +36,13 @@ metadata:
 
 ```
 
-### Creation
+#### Creation
 
 Create the namespaces via the command of `kubectl apply -f ./namespaces.yml`
 
-## Create the secret
+### Create the secret
 
-### Yaml file
+#### Yaml file
 
 Create a text file, named my-luks-secret with the content of
 
@@ -44,14 +50,14 @@ Create a text file, named my-luks-secret with the content of
 luksKey=AVerySecretForLuksDiskEncryption
 ```
 
-### Creation
+#### Creation
 
 Create the secret via the command of
 `kubectl create secret generic my-luks-secret -n csi-encrypt-keys --from-env-file=./my-luks-secret`
 
-## Create the storage class:
+### Create the storage class:
 
-### Yaml file
+#### Yaml file
 
 Create a yaml file, named `luks-storage-class.yml` with the content of:
 
@@ -74,14 +80,14 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-name: my-luks-secret
 ```
 
-### Creation
+#### Creation
 
 Create the storage class via the command of
 `kubectl apply -f ./luks-storage-class.yml`
 
-## Create the initial PV (automatically, via a PVC declaration)
+### Create the initial PV (automatically, via a PVC declaration)
 
-### Yaml file
+#### Yaml file
 
 Create a yaml file, named `initial-pv.yml` with the content of:
 
@@ -100,11 +106,11 @@ spec:
   storageClassName: my-luks-storage-class
 ```
 
-### Creation
+#### Creation
 
 Create the pv/pvc pair via the command of `kubectl apply -f ./initial-pv.yml`
 
-## Get new volume details, persist for the recreation later
+### Get new volume details, persist for the recreation later
 
 Run the commands
 
@@ -118,9 +124,9 @@ echo "VolumeHandle: " + ${volumeHandle}
 echo "csiProvisionerIdentity: " + ${csiProvisionerIdentity}
 ```
 
-## Create a real service, using the pv and pvc
+### Create a real service, using the pv and pvc
 
-### Yaml file
+#### Yaml file
 
 Create a yaml file, named `dbs.yml` with the content of:
 
@@ -169,27 +175,27 @@ spec:
       targetPort: 27017
 ```
 
-### Creation
+#### Creation
 
 Create the service and sts via the command of `kubectl apply -f ./dbs.yml`
 
-### Wait for the service to get initialized (a minute or two should suffice)
+#### Wait for the service to get initialized (a minute or two should suffice)
 
-## Delete the real service
+### Delete the real service
 
 Run the command `kubectl delete -f ./dbs.yml`
 
-## Delete the pvc
+### Delete the pvc
 
 Run the command `kubectl delete pvc my-pvc -n my-namespace`
 
-## Delete the pv
+### Delete the pv
 
 Run the command `kubectl delete pv PV-NAME-HERE`. Use the `pvName` from Step4.
 
-## Recreate the pv and pvc:
+### Recreate the pv and pvc:
 
-### Yaml file
+#### Yaml file
 
 Create a yaml file named `mypv-secondary.template.yml` with the content of:
 
@@ -242,7 +248,7 @@ spec:
   volumeName: %#VOLUME_NAME#%
 ```
 
-### Creation
+#### Creation
 
 Recreate the pv and pvc via the command
 
@@ -253,8 +259,12 @@ cat mypv-secondary.template.yml | \
 	kubectl apply -f -
 ```
 
-## Try creating the real service again
+### Try creating the real service again
 
 Run the command `kubectl apply -f ./dbs.yml`
 
 Checking the pv and pvc now list the unable to mount error.
+
+## Run-all
+
+Run the `all-steps.sh` script to run all the steps in one go.
