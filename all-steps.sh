@@ -97,3 +97,9 @@ echo ""
 echo ""
 echo "================================================================================"
 kubectl describe pv ${pvName}
+echo ""
+echo ""
+echo ""
+echo ""
+echo "================================================================================"
+kubectl describe pods -n my-namespace ze-mongodb-0
