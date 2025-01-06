@@ -53,7 +53,7 @@ echo ""
 echo "Creating the real service..."
 ./step6-create-real-service.sh $kubeConfig
 echo "Give the system some time to create the real service..."
-show_progress 40 3
+show_progress 60 3
 echo ""
 
 echo "Deleting the real service..."
