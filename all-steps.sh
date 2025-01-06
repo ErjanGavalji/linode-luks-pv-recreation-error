@@ -39,7 +39,7 @@ echo ""
 echo "Creating the namespace and initial pv..."
 ./step4-create-initial-pv.sh $kubeConfig
 echo "Give the system some time to create the pv and pvc..."
-show_progress 20 3
+show_progress 60 3
 echo ""
 
 VOLUME_DETAILS=$(./step5-get-volume-details.sh $kubeConfig)
