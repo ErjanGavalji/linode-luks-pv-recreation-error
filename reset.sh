@@ -6,8 +6,7 @@ if [ -z "$kubeconfig" ]; then
 	exit 1
 fi
 
-export KUBECONFIG=$KUBECONFIG
-
+export KUBECONFIG=$kubeconfig
 
 function show_progress() {
 	total=$1
