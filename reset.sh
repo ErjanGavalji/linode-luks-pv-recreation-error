@@ -28,7 +28,7 @@ function show_progress() {
 echo "Deleting the real service..."
 kubectl delete -f ./dbs.yml
 echo "Give the system some time to delete the real service..."
-show_progess 20 3
+show_progress 20 3
 echo ""
 
 echo "Deleting the pvc and pv..."
