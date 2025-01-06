@@ -1,0 +1,15 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: my-namespace
+  labels:
+    name: my-namespace
+
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: csi-encrypt-keys
+  labels:
+    name: csi-encrypt-keys
+

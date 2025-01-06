@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-sts
+  namespace: my-namespace
+spec:
+  serviceName: "ze-mongodb"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ze-mongodb
+  template:
+    metadata:
+      labels:
+        app: ze-mongodb
+    spec:
+      containers:
+      - name: mongodb-container
+        image: mongo:5.0.11
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: my-pvc
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ze-mongodb-service
+  namespace: my-namespace
+spec:
+  selector:
+    app: ze-mongodb
+  clusterIP: None
+  ports:
+    - port: 27017
+      targetPort: 27017
+

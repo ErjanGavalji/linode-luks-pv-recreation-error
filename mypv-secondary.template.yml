@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: %#VOLUME_NAME#%
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: my-luks-storage-class
+  volumeMode: Filesystem
+  csi:
+    driver: linodebs.csi.linode.com
+    fsType: ext4
+    nodeStageSecretRef:
+      name: my-luks-secret
+      namespace: csi-encrypt-keys
+    volumeAttributes:
+      linodebs.csi.linode.com/luks-cipher: aes-xts-plain64
+      linodebs.csi.linode.com/luks-encrypted: "true"
+      linodebs.csi.linode.com/luks-key-size: "512"
+    volumeHandle: %#VOLUME_HANDLE#%
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: healeeDesignation
+          operator: In
+          values:
+            - load2
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: experimental-mongodb-pvc
+  namespace: telehealth-dbs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: linode-block-storage-retain-experimental-mongodb-luks
+  volumeName: %#VOLUME_NAME#%
+
+
