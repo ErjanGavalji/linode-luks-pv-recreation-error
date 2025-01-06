@@ -192,7 +192,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: experimental-mongodb-pvc
-  namespace: telehealth-dbs
+  namespace: my-namespace
 spec:
   accessModes:
   - ReadWriteOnce

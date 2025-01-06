@@ -23,6 +23,8 @@ function show_progress() {
 	echo ""
 }
 
+export KUBECONFIG=${kubeConfig}
+
 echo "Creating the namespaces..."
 ./step1-create-namespaces.sh $kubeConfig
 
