@@ -42,7 +42,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: linode-block-storage-retain-experimental-mongodb-luks
+  storageClassName: my-luks-storage-class
   volumeName: %#VOLUME_NAME#%
 
 
