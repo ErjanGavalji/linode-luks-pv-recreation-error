@@ -90,7 +90,7 @@ echo ""
 echo ""
 echo ""
 echo "================================================================================"
-kubectl describe pvc my-pvc
+kubectl describe pvc my-pvc -n my-namespace
 echo ""
 echo ""
 echo ""
