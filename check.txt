@@ -1,0 +1,1 @@
+https://www.linode.com/community/questions/22083/statefulset-volumeclaimtemplates-stopped-working-recently
