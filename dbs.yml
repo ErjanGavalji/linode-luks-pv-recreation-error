@@ -22,10 +22,20 @@ spec:
         volumeMounts:
         - name: mongodb-data
           mountPath: /data/db
-      volumes:
-        - name: mongodb-data
-          persistentVolumeClaim:
-            claimName: my-pvc
+          #      volumes:
+          #        - name: mongodb-data
+          #          persistentVolumeClaim:
+          #            claimName: my-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: my-luks-storage-class
 ---
 
 apiVersion: v1
