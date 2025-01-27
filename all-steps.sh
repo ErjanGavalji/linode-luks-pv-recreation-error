@@ -36,9 +36,15 @@ echo "Creating the storage class..."
 ./step3-create-storage-class.sh $kubeConfig
 echo ""
 
-echo "Creating the namespace and initial pv..."
-./step4-create-initial-pv.sh $kubeConfig
-echo "Give the system some time to create the pv and pvc..."
+#echo "Creating the initial pv..."
+#./step4-create-initial-pv.sh $kubeConfig
+#echo "Give the system some time to create the pv and pvc..."
+#show_progress 60 3
+#echo ""
+
+echo "Creating the real service..."
+./step6-create-real-service.sh $kubeConfig
+echo "Give the system some time to create the real service..."
 show_progress 60 3
 echo ""
 
@@ -48,12 +54,6 @@ pvName=$(echo "$VOLUME_DETAILS" | sed -n 's/^pvName://p')
 volumeHandle=$(echo "$VOLUME_DETAILS" | sed -n 's/^volumeHandle://p')
 echo "pvName: ${pvName}"
 echo "volumeHandle: ${volumeHandle}"
-echo ""
-
-echo "Creating the real service..."
-./step6-create-real-service.sh $kubeConfig
-echo "Give the system some time to create the real service..."
-show_progress 60 3
 echo ""
 
 echo "Deleting the real service..."
@@ -90,7 +90,7 @@ echo ""
 echo ""
 echo ""
 echo "================================================================================"
-kubectl describe pvc my-pvc -n my-namespace
+kubectl describe pvc mongodb-data-ze-mongodb-0 -n my-namespace
 echo ""
 echo ""
 echo ""

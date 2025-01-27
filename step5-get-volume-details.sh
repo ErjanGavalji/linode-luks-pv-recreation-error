@@ -8,7 +8,7 @@ fi
 
 export KUBECONFIG=${kubeConfig}
 
-pvName=$(kubectl get pvc my-pvc -n my-namespace -o jsonpath='{.spec.volumeName}')
+pvName=$(kubectl get pvc mongodb-data-ze-mongodb-0 -n my-namespace -o jsonpath='{.spec.volumeName}')
 volumeHandle=$(kubectl get pv ${pvName} -o jsonpath='{.spec.csi.volumeHandle}')
 csiProvisionerIdentity=$(kubectl get pv ${pvName} -o jsonpath="{.spec.csi.volumeAttributes.storage\.kubernetes\.io/csiProvisionerIdentity}")
 

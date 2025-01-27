@@ -8,4 +8,4 @@ fi
 
 export KUBECONFIG=${kubeConfig}
 
-kubectl delete pvc my-pvc -n my-namespace
+kubectl delete pvc mongodb-data-ze-mongodb-0 -n my-namespace
