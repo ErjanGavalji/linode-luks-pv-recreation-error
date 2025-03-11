@@ -8,4 +8,4 @@ fi
 
 export KUBECONFIG=${kubeConfig}
 
-kubectl apply -f ./dbs.yml
+kubectl apply -f ./dbs-new.yml
