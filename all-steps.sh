@@ -90,7 +90,7 @@ echo ""
 echo ""
 echo ""
 echo "================================================================================"
-kubectl describe pvc my-pvc -n my-namespace
+kubectl describe pvc my-pvc -n my-new-namespace
 echo ""
 echo ""
 echo ""
@@ -102,4 +102,4 @@ echo ""
 echo ""
 echo ""
 echo "================================================================================"
-kubectl describe pods -n my-namespace ze-mongodb-0
+kubectl describe pods -n my-new-namespace ze-mongodb-0
